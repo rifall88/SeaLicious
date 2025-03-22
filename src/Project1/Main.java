@@ -30,6 +30,7 @@ public class Main {
         System.out.println("          === Menu Yang Ada di SeaLicious ===");
         System.out.println("--------------------------------------------------------");
         item1.displayMenuItem();
-        item2.displayMenuItem();   }
+        item2.displayMenuItem();   
+   }
 }
 
