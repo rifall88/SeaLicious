@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Project4;
+package Project5;
 
 /**
  *
@@ -15,7 +15,7 @@ public class MenuItem {
     private int stock; //modifier private
     private String description; //modifier private
     
-    //Membuat Constructor Dengan 5 Parameter
+    //Membuat Constructor Dengan 5 Parameter (Overloading)
     public MenuItem(String name, String category, int price, int stock, String description) {
         this.name = name;
         this.category = category;
@@ -23,13 +23,19 @@ public class MenuItem {
         this.stock = stock;
         this.description = description;
     }
-    //Membuat Constructor Tanpa Parameter
+    //Membuat Constructor Tanpa Parameter (Overloading)
     public MenuItem() {
         this.name = name;
         this.category = category;
         this.price = price;
         this.stock = stock;
         this.description = description;
+    }
+    //Membuat method untuk ditampilkan ke TextArea
+    public String displayInfo() {
+        return  "==== Menu Yang Ada di SeaLicious ===" +
+                "\nNama : " + name + "\nKatagori: " + category + "\nHarga : " + price +
+                "\nStok: " + stock + "\nDeskripsi : " + description;
     }
      //Mendeklarasi mutator method
     public void setName(String name){
@@ -62,9 +68,5 @@ public class MenuItem {
     }
     public String getDescription(){
         return description;
-    }
-
-    String displayInfo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
