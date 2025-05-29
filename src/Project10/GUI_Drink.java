@@ -1,0 +1,387 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package Project10;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Asus
+ */
+public class GUI_Drink extends javax.swing.JFrame {
+    String ukuran, panasdingin;
+
+    /**
+     * Creates new form GUI_Drink
+     */
+    public GUI_Drink() {
+        initComponents();
+        tampil();
+    }
+    
+    public Connection conn;
+    
+    public void koneksi() throws SQLException {
+        try {
+            conn = null;
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/SeaLicious?serverTimezone=UTC",
+        "root",
+        "");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI_Drink.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            Logger.getLogger(GUI_Drink.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception es) {
+            Logger.getLogger(GUI_Drink.class.getName()).log(Level.SEVERE, null, es);
+        }
+    }
+    
+    public void tampil() {
+        DefaultTableModel tabelhead = new DefaultTableModel();
+        tabelhead.addColumn("Ukuran");
+        tabelhead.addColumn("Panas/Dingin");
+        try {
+            koneksi();
+            String sql = "SELECT * FROM tb_drink";
+            Statement stat = conn.createStatement();
+            ResultSet res = stat.executeQuery(sql);
+            while (res.next()) {
+                tabelhead.addRow(new Object[]{res.getString(2), res.getString(3),});
+            }
+            tableDrink.setModel(tabelhead);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "BELUM TERKONEKSI");
+        }
+    }
+    
+    public void refresh() {
+        new GUI_Drink().setVisible(true);
+        this.setVisible(false);
+    }
+    
+    public void insert() {
+        String Ukuran = txtukrn.getText();
+        String PanasDingin;
+        if (btnpanas.isSelected()) {
+            PanasDingin = "Panas";
+        } else {
+            PanasDingin = "Dingin";
+        }
+        try {
+            koneksi();
+            Statement statement = conn.createStatement();
+            statement.executeUpdate("INSERT INTO tb_drink (ukuran, panasdingin)"
+                    + "VALUES('" + Ukuran + "','" + PanasDingin + "')");
+            statement.close();
+            JOptionPane.showMessageDialog(null, "Berhasil Memasukan Data Drink!" + "\n" + Ukuran);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Terjadi Kesalahan Input!");
+        }
+        refresh();
+    }
+    
+    public void update() {
+        String Ukuran = txtukrn.getText();
+        String PanasDingin;
+        if (btnpanas.isSelected()) {
+            PanasDingin = "Panas";
+        } else {
+            PanasDingin = "Dingin";
+        }
+        String ukuranlama = ukuran;
+        try {
+            Statement statement = conn.createStatement();
+            statement.executeUpdate("UPDATE tb_drink SET ukuran='" + Ukuran + "'," + "panasdingin='" + PanasDingin + "' WHERE ukuran = '" + ukuranlama + "'");
+            statement.close();
+            conn.close();
+            JOptionPane.showMessageDialog(null, "Update Data Drink Berhasil!");
+        } catch (Exception e) {
+            System.out.println("Error : " + e);
+        }
+        refresh();
+    }
+    
+    public void delete() {
+        int ok = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin akan menghapus data ?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (ok == 0) {
+            try {
+                String sql = "DELETE FROM tb_drink WHERE ukuran ='" + txtukrn.getText() + "'";
+                java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Data Berhasil di hapus");
+                batal();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Data gagal di hapus");
+            }
+        }
+        refresh();
+    }
+    
+    public void itempilih() {
+        txtukrn.setText(ukuran);
+        if (panasdingin.equalsIgnoreCase("Panas")) {
+            btnpanas.setSelected(true);
+        } else {
+            btndingin.setSelected(true);
+        }
+    }
+    
+    public void batal() {
+        txtukrn.setText("");
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel8 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtukrn = new javax.swing.JTextField();
+        btnpanas = new javax.swing.JRadioButton();
+        btndingin = new javax.swing.JRadioButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnSimpan = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableDrink = new javax.swing.JTable();
+        btnHapus = new javax.swing.JButton();
+        btnBatal = new javax.swing.JButton();
+        btnClose = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jLabel8.setText("Menu Minuman");
+
+        jLabel1.setText("Ukuran");
+
+        btnpanas.setText("Panas");
+
+        btndingin.setText("Dingin");
+
+        jLabel2.setText("Panas/Dingin");
+
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
+
+        tableDrink.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Ukuran", "Panas/Dingin"
+            }
+        ));
+        tableDrink.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableDrinkMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tableDrink);
+
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
+
+        btnBatal.setText("Batal");
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatalActionPerformed(evt);
+            }
+        });
+
+        btnClose.setText("Close");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
+
+        btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(121, 121, 121)
+                .addComponent(jLabel8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(62, 62, 62)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnpanas)
+                    .addComponent(txtukrn, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btndingin))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnSimpan)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnHapus)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBatal)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnClose)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdate)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabel8)
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtukrn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnpanas)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btndingin))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(jLabel2)))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSimpan)
+                    .addComponent(btnHapus)
+                    .addComponent(btnBatal)
+                    .addComponent(btnClose)
+                    .addComponent(btnUpdate))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        // TODO add your handling code here:
+        insert();
+        
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        delete();
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
+        // TODO add your handling code here:
+        batal();
+    }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        update();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void tableDrinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDrinkMouseClicked
+        // TODO add your handling code here:
+        int tabel = tableDrink.getSelectedRow();
+        ukuran = tableDrink.getValueAt(tabel, 0).toString();
+        panasdingin = tableDrink.getValueAt(tabel, 1).toString();
+        itempilih();
+    }//GEN-LAST:event_tableDrinkMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(GUI_Drink.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(GUI_Drink.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GUI_Drink.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(GUI_Drink.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new GUI_Drink().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBatal;
+    private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JRadioButton btndingin;
+    private javax.swing.JRadioButton btnpanas;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tableDrink;
+    private javax.swing.JTextField txtukrn;
+    // End of variables declaration//GEN-END:variables
+}
